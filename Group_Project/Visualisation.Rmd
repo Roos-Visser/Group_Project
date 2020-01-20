@@ -1,0 +1,39 @@
+---
+title: "Visualisation in R"
+output: html_notebook
+---
+
+
+```{r}
+library(tidyverse)
+library(xtable)
+options(xtable.floating = FALSE)
+options(xtable.timestamp = "")
+
+```
+
+```{r}
+#musicians <- csv_read('csv_data')
+conflict <- read_csv('relevant_data_years_type.csv')
+```
+
+```{r}
+Number_of_incidents <- conflict %>%
+  group_by(Type_of_violence) %>%
+  summarize(n_incidents = n())
+xtable(Number_of_incidents)
+```
+
+
+```{r}
+ggplot(conflict) + 
+  geom_count(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence))
+```
+
+```{r}
+conflict %>%
+  arrange(Type_of_violence) %>%
+  ggplot() +
+    geom_col(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence), position='stack')
+```
+
