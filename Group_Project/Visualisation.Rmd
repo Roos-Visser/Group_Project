@@ -13,27 +13,29 @@ options(xtable.timestamp = "")
 ```
 
 ```{r}
-#musicians <- csv_read('csv_data')
-conflict <- read_csv('relevant_data_years_type.csv')
+musicians <- read_csv('genres_data.csv')
+#conflict <- read_csv('relevant_data_years_type.csv')
 ```
 
 ```{r}
-Number_of_incidents <- conflict %>%
-  group_by(Type_of_violence) %>%
-  summarize(n_incidents = n())
-xtable(Number_of_incidents)
+Number_of_genres <- musicians %>%
+  group_by(genre) %>%
+  summarize(n_genres = n()) %>%
+  arrange(n_genres) %>%
+  head(10)
+xtable(Number_of_genres)
 ```
 
 
 ```{r}
-ggplot(conflict) + 
-  geom_count(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence))
+ggplot(musicians) + 
+  geom_count(mapping = aes(x = year, y = genre, color = genre))
 ```
 
 ```{r}
-conflict %>%
-  arrange(Type_of_violence) %>%
+musicians %>%
+  arrange(genre) %>%
   ggplot() +
-    geom_col(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence), position='stack')
+    geom_col(mapping = aes(x = year, y = genre, color = genre), position='stack')
 ```
 
