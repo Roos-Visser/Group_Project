@@ -2,27 +2,31 @@
 title: "Visualisation in R"
 output: html_notebook
 ---
-```{r}
-
-```
 
 
 ```{r}
 library(tidyverse)
+library(xtable)
+options(xtable.floating = FALSE)
+options(xtable.timestamp = "")
+
+```
+
+```{r}
 #musicians <- csv_read('csv_data')
 conflict <- read_csv('relevant_data_years_type.csv')
 ```
 
 ```{r}
-grouped_data <- conflict %>%
-  group_by(Type_of_violence)
-
-
+Number_of_incidents <- conflict %>%
+  group_by(Type_of_violence) %>%
+  summarize(n_incidents = n())
+xtable(Number_of_incidents)
 ```
 
 
 ```{r}
-ggplot(grouped_data) + 
+ggplot(conflict) + 
   geom_count(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence))
 ```
 
