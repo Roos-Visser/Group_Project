@@ -28,12 +28,15 @@ def convert_csv(filepath):
                 else:
                     list_data.append([entry["ontology/activeYearsStartYear"],entry["ontology/genre_label"]])
 
-            #classification of the genres
+            classification of the genres
         for genre in list_data:
             if genre[1] in ("Hard rock", "blues rock"):
                 genre[1] = "Rock music"
             elif genre[1] in ("Britpop", "Christian alternative rock", "college rock", "dream pop", "emo", "geek rock", "gothic rock", "grunge", "indie rock", "math rock", "noise pop", "nu gaze", "post-grunge","post-punk revival", "post-rock", "shoegazing"):
                 genre[1] = "Alternative rock"
+            elif genre[1] in ("Art pop", "Bubblegum pop", "Dance-pop", "Experimental pop", "New wave music", "Operatic pop", "Progressive pop", "Sophisti-pop", "Space age pop", "Sunshine pop", "Synthpop", "Teen pop", "K-pop", "Electropop", "Latin pop", "Arabic pop music", "Indian pop", "Mexican pop music", "Europop", "French pop music", "Power pop", "Traditional pop music", "Operatic pop", "Baroque pop", "Britpop", "Art pop", "Balkan_pop", "Dream pop", "J-pop"):
+                genre[1] = "Pop music"
+            elif genre[1] in ("Alternative hip hop", "Christian hip hop", )
             
 
         writer = csv.writer(file)
@@ -48,4 +51,4 @@ with open('genres_data.csv', 'w', encoding='utf8') as file:
 # convert_csv('./People/A_people.json')
 
 for letter in alphabet:
-    convert_csv(f'./People/{letter}_people.json')
+    convert_csv(f'./GroupProject/Group_Project/People/{letter}_people.json')
