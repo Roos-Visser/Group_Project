@@ -27,6 +27,15 @@ def convert_csv(filepath):
                         list_data.append([entry["ontology/activeYearsStartYear"],genre])
                 else:
                     list_data.append([entry["ontology/activeYearsStartYear"],entry["ontology/genre_label"]])
+
+            #classification of the genres
+        for genre in list_data:
+            if genre[1] in ("Hard rock", "blues rock"):
+                genre[1] = "Rock music"
+            elif genre[1] in ("Britpop", "Christian alternative rock", "college rock", "dream pop", "emo", "geek rock", "gothic rock", "grunge", "indie rock", "math rock", "noise pop", "nu gaze", "post-grunge","post-punk revival", "post-rock", "shoegazing"):
+                genre[1] = "Alternative rock"
+            
+
         writer = csv.writer(file)
         writer.writerows(list_data)
                 # file.write(f'{entry["ontology/activeYearsStartYear"]},{entry["ontology/genre_label"]}\n')
