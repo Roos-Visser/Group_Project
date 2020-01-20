@@ -1,0 +1,35 @@
+---
+title: "Visualisation in R"
+output: html_notebook
+---
+```{r}
+
+```
+
+
+```{r}
+library(tidyverse)
+#musicians <- csv_read('csv_data')
+conflict <- read_csv('relevant_data_years_type.csv')
+```
+
+```{r}
+grouped_data <- conflict %>%
+  group_by(Type_of_violence)
+
+
+```
+
+
+```{r}
+ggplot(grouped_data) + 
+  geom_count(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence))
+```
+
+```{r}
+conflict %>%
+  arrange(Type_of_violence) %>%
+  ggplot() +
+    geom_col(mapping = aes(x = year, y = Type_of_violence, color = Type_of_violence), position='stack')
+```
+
