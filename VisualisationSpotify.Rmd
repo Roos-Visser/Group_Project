@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r}
+# load in tidyverse
+library(tidyverse)
+library(ggplot2)
+
+# Assign csv file to a variable
+Spotify<- read_csv("top10s.csv")
+
+# Rename variable top genre to genre
+names(Spotify)[names(Spotify) == 'top genre'] <- 'genre'
+
+# Select correct columns
+spotify_filtered <- Spotify %>%
+  select('genre', pop, year)
+```
+
+```{r}
+# read in new file
+GenresCombined <- read_csv('GenresCombined.csv')
+# Combine two files
+spotify_filtered <- left_join(spotify_filtered, GenresCombined, by = 'genre')
+
+
+```
+
+```{r}
+# Make the values for year numeric, and rename the columns
+spotify_filtered <- spotify_filtered %>%
+  mutate (
+    Year = as.numeric(year)
+  )
+
+names(spotify_filtered)[names(spotify_filtered) == 'genre'] <- 'many_genres'
+names(spotify_filtered)[names(spotify_filtered) == 'classified_genre'] <- 'Genre'
+
+```
+
+```{r}
+spotify_filtered <- spotify_filtered %>%
+  group_by(Genre, Year) %>%
+  summarize(total = mean(pop, na.rm = TRUE)) %>%
+  na.omit()
+
+#creating a bar graph
+ggplot(data = spotify_filtered)+
+  geom_col(mapping = aes(
+    x = Genre, y = total)) 
+
+# creating a graph with year, genre and pop score
+ggplot(data = spotify_filtered) +
+  geom_line(aes(
+    colour = Genre, y = total, x = Year
+  ))
+  
+
+```
