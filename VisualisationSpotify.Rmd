@@ -33,7 +33,7 @@ spotify_filtered <- left_join(spotify_filtered, GenresCombined, by = 'genre')
 # Make the values for year numeric, and rename the columns
 spotify_filtered <- spotify_filtered %>%
   mutate (
-    Year = as.numeric(year)
+    year = as.Date(paste0(year,"-1-1"),"%Y-%m-%d")
   )
 
 names(spotify_filtered)[names(spotify_filtered) == 'genre'] <- 'many_genres'
@@ -43,20 +43,22 @@ names(spotify_filtered)[names(spotify_filtered) == 'classified_genre'] <- 'Genre
 
 ```{r}
 spotify_filtered <- spotify_filtered %>%
-  group_by(Genre, Year) %>%
+  group_by(Genre, year) %>%
   summarize(total = mean(pop, na.rm = TRUE)) %>%
   na.omit()
 
 #creating a bar graph
-ggplot(data = spotify_filtered)+
+ggplot(data = spotify_filtered) +
   geom_col(mapping = aes(
-    x = Genre, y = total)) 
+    x = reorder(Genre, total), y = total)) + 
+    xlab("Genres") + ylab("Average popularity score") +
+    ggtitle("Popularity scores per music genre (2010-2019)")
 
 # creating a graph with year, genre and pop score
-ggplot(data = spotify_filtered) +
-  geom_line(aes(
-    colour = Genre, y = total, x = Year
-  ))
+#ggplot(data = spotify_filtered) +
+ # geom_line(aes(
+  #  colour = Genre, y = total, x = year
+  #))
   
 
 ```
