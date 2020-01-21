@@ -9,11 +9,11 @@ library(tidyverse)
 library(xtable)
 options(xtable.floating = FALSE)
 options(xtable.timestamp = "")
-
 ```
 
 ```{r}
 musicians <- read_csv('genres_data.csv')
+genres <- read_csv('genres-mapping.csv')
 #conflict <- read_csv('relevant_data_years_type.csv')
 ```
 
@@ -21,21 +21,58 @@ musicians <- read_csv('genres_data.csv')
 Number_of_genres <- musicians %>%
   group_by(genre) %>%
   summarize(n_genres = n()) %>%
-  arrange(n_genres) %>%
-  head(10)
-xtable(Number_of_genres)
+  arrange(desc(n_genres))
+```
+
+```{r}
+musicians <- left_join(musicians, genres, by='genre')
 ```
 
 
 ```{r}
+musicians <- musicians %>%
+  mutate(
+    Year = as.numeric(year)
+  ) %>%
+  filter(year > 1900,
+         classified_genre == "Pop music" |
+         classified_genre == "Hip hop music" |
+         classified_genre == "Rock music" | 
+         classified_genre == "Alternative rock" | 
+         classified_genre == "Pop rock" |
+         classified_genre == "Country music" |
+         classified_genre == "Folk music" |
+         classified_genre == "Heavy metal music" |
+         classified_genre == "Rhythm and blues" |
+         classified_genre == "Soul music") %>%
+  mutate(
+    many_genres = genre,
+    Genre = classified_genre,
+  )
+```
+
+
+```{r}
+Number_of_genre_news <- musicians %>%
+  group_by(classified_genre) %>%
+  summarize(n_genres = n()) %>%
+  arrange(desc(n_genres))
+```
+
+
+
+```{r}
 ggplot(musicians) + 
-  geom_count(mapping = aes(x = year, y = genre, color = genre))
+  geom_count(mapping = aes(x = Year, y = Genre, color = Genre)) +
+  guides(color = FALSE) +
+  ggtitle("New artists by genre over time") +
+  ggsave("dotplot.pdf")
 ```
 
 ```{r}
 musicians %>%
   arrange(genre) %>%
   ggplot() +
-    geom_col(mapping = aes(x = year, y = genre, color = genre), position='stack')
+    geom_col(mapping = aes(x = Year, y = Genre, color = Genre), position='stack')
 ```
 
