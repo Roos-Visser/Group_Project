@@ -67,6 +67,10 @@ musicians_10 <- musicians %>%
          classified_genre == "Soul music")
 ```
 
+```{r}
+musicians <- left_join(musicians, genres, by='genre')
+```
+
 
 ```{r}
 Number_of_genre_news <- musicians_10 %>%
