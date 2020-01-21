@@ -3,43 +3,42 @@ title: "Visualisation in R"
 output: html_notebook
 ---
 
-
+Installing all the packages we need. 
 ```{r}
 #install.packages("ggthemes")
 #install.packages("xtable")
-```
-
-```{r}
 #install.packages("extrafont")
+#font_import(pattern = "lmroman*")
 ```
 
-
-
+Loading the relevant packages.
 ```{r}
 library(tidyverse)
 library(xtable)
 library(ggthemes)
 library(RColorBrewer)
-#library(extrafont)
-#font_import()
-options(xtable.floating = FALSE)
-options(xtable.timestamp = "")
+library(extrafont)
 ```
 
+Make the right font.
+```{r}
+loadfonts()
+par(family = "CMU Serif")
+```
+
+Loading the data.
 ```{r}
 musicians <- read_csv('genres_data.csv')
 genres <- read_csv('genres-mapping.csv')
-#conflict <- read_csv('relevant_data_years_type.csv')
 ```
 
-```{r}
-```
-
+Rewriting the genres to only include the 20 most common ones.
 ```{r}
 musicians <- left_join(musicians, genres, by='genre')
 ```
 
-
+Renaming the columns to "Genre" and "Year" for the relevant columns.
+Defining a dataframe with the 10 most common genres out of the 20.
 ```{r}
 musicians <- musicians %>%
   mutate(
@@ -49,72 +48,66 @@ musicians <- musicians %>%
   ) %>%
   filter(year > 1900)
 
-Number_of_genres <- musicians %>%
+musicians_10 <- musicians %>%
+  filter(Genre == "Pop music" |
+         Genre == "Hip hop music" |
+         Genre == "Rock music" | 
+         Genre == "Alternative rock" | 
+         Genre == "Pop rock" |
+         Genre == "Country music" |
+         Genre == "Folk music" |
+         Genre == "Heavy metal music" |
+         Genre == "Rhythm and blues" |
+         Genre == "Soul music")
+```
+
+Defining two dataframes with the number of genres for each of the 20 and 10 most common genres. 
+```{r}
+Number_of_genres_10 <- musicians_10 %>%
   group_by(Genre, Year) %>%
   summarize(n_genres = n()) %>%
   arrange(desc(n_genres))
 
-musicians_10 <- musicians %>%
-  filter(classified_genre == "Pop music" |
-         classified_genre == "Hip hop music" |
-         classified_genre == "Rock music" | 
-         classified_genre == "Alternative rock" | 
-         classified_genre == "Pop rock" |
-         classified_genre == "Country music" |
-         classified_genre == "Folk music" |
-         classified_genre == "Heavy metal music" |
-         classified_genre == "Rhythm and blues" |
-         classified_genre == "Soul music")
-```
-
-```{r}
-musicians <- left_join(musicians, genres, by='genre')
-```
-
-
-```{r}
-Number_of_genre_news <- musicians_10 %>%
-  group_by(classified_genre) %>%
+Number_of_genres_20 <- musicians %>%
+  group_by(Genre, Year) %>%
   summarize(n_genres = n()) %>%
   arrange(desc(n_genres))
 ```
 
-
-
+Plotting a count-graph with the 10 most common genres.
 ```{r}
 ggplot(musicians_10) + 
   geom_count(mapping = aes(x = Year, y = Genre, color = Genre), alpha = 0.7) +
   guides(color = FALSE) + 
   scale_size_area() +
-  ggtitle("New artists by genre over time") +
-  theme_economist() +
-  theme(text=element_text(family="serif(roman)",face="bold")) +
+  theme_hc() + 
+  theme(text=element_text(family="CMU Serif")) +
+  ggtitle("New artists by genre") +
    ggsave("dotplot.pdf")
 ```
 
-
+  
+  
+Plotting a linegraph with the 10 most common genres.
 ```{r}
-Number_of_genre_new <- musicians_10 %>%
-  group_by(Genre, Year) %>%
-  summarize(n_genres = n()) %>%
-  arrange(desc(n_genres))
-
-ggplot(Number_of_genre_new) +
+ggplot(Number_of_genres_10) +
   geom_line(mapping = aes(x = Year, y = n_genres, color = Genre)) +
   xlab("Year") + ylab("Number of new artists") +
   ggtitle("New artists by genre") +
-  theme_economist() +
+  theme_hc() +
+  theme(text=element_text(family="CMU Serif")) +
   ggsave("Linegraph_artists.pdf") 
 ```
 
+Plotting a linegraph with the 3 popular genres
 ```{r}
-Number_of_genres %>%
-  filter(
-    Genre == "Dance music" |
+most_popular <- Number_of_genres_20 %>%
+  filter(Genre == "Dance music" |
     Genre == "Pop  music" | 
-    Genre == "Hip hop music"
-  ) %>% 
-  ggplot() +
-  geom_line(mapping = aes(x = Year, y = n_genres, color = Genre))
+    Genre == "Hip hop music") 
+
+  ggplot(most_popular) +
+  geom_line(mapping = aes(x = Year, y = n_genres, color = Genre)) +
+  xlab("Year") + ylab("Number of new artists")
 ```
 
