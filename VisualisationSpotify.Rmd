@@ -73,8 +73,8 @@ ggplot(data = remove_missing(spotify_filtered)) +
           text = element_text(family = "CMU Serif"))  +
     xlab("Genres") + ylab("Popularity score") +
     ggtitle("Popularity score per music genre (2010-2019)") +
-    ggsave("Violin_graph_spotify.pdf") +
-  geom_point(mapping = aes(x=Genre, y = pop))
+  geom_point(mapping = aes(x=Genre, y = pop)) +
+     ggsave("Violin_graph_spotify.pdf") 
   
 
 ```
