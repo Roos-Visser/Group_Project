@@ -14,17 +14,32 @@ billboard <- read_csv("billboard.csv")
 ```
 
 ```{r}
-billboard_plot <- billboard %>%
+billboard_pop_column <- billboard %>%
   group_by(genre, year) %>%
   mutate(
-    popularity = pos/count
-  ) %>%
+    pos = 101 - pos,
+    popularity = pos*count
+  )
+
+billboard_plot <-  billboard_pop_column%>%
   summarize(
     popularity = sum(popularity),
     total_count = sum(count)
   ) %>%
   mutate(
-    popularity = popularity / total_count
+    popularity = popularity
+  ) %>%
+  filter(
+    genre != "jazz",
+    genre != "religious",
+    genre != "disco",
+    genre != "classical/soundtrack",
+    genre != "swing",
+    genre != "reggae",
+    genre != "blues",
+    genre != "country",
+    genre != "folk",
+    genre != "alternative/indie"
   )
 ```
 
