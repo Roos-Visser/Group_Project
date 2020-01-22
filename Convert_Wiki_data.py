@@ -45,9 +45,9 @@ def convert_csv(filepath):
         #         genre[1] = "Punk rock"
         #     elif genre[1] in ("Rockabilly", ...):
         #         genre[1] = "Rhythm and blues"
-            elif genre[1] in ("Art pop", "Bubblegum pop", "Dance-pop", "Experimental pop", "New wave music", "Operatic pop", "Progressive pop", "Sophisti-pop", "Space age pop", "Sunshine pop", "Synthpop", "Teen pop", "K-pop", "Electropop", "Latin pop", "Arabic pop music", "Indian pop", "Mexican pop music", "Europop", "French pop music", "Power pop", "Traditional pop music", "Operatic pop", "Baroque pop", "Britpop", "Art pop", "Balkan_pop", "Dream pop", "J-pop"):
-                genre[1] = "Pop music"
-            elif genre[1] in ("Alternative hip hop", "Christian hip hop", )
+        #   elif genre[1] in ("Art pop", "Bubblegum pop", "Dance-pop", "Experimental pop", "New wave music", "Operatic pop", "Progressive pop", "Sophisti-pop", "Space age pop", "Sunshine pop", "Synthpop", "Teen pop", "K-pop", "Electropop", "Latin pop", "Arabic pop music", "Indian pop", "Mexican pop music", "Europop", "French pop music", "Power pop", "Traditional pop music", "Operatic pop", "Baroque pop", "Britpop", "Art pop", "Balkan_pop", "Dream pop", "J-pop"):
+        #        genre[1] = "Pop music"
+        #    elif genre[1] in ("Alternative hip hop", "Christian hip hop", )
             
 
         writer = csv.writer(file)
