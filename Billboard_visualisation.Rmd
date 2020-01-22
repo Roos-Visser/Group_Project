@@ -1,0 +1,40 @@
+---
+title: "Visualise billboard data"
+output: html_notebook
+---
+ 
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+```
+
+```{r}
+billboard <- read_csv("billboard.csv")
+```
+
+```{r}
+billboard_plot <- billboard %>%
+  group_by(genre, year) %>%
+  mutate(
+    popularity = pos/count
+  ) %>%
+  summarize(
+    popularity = sum(popularity),
+    total_count = sum(count)
+  ) %>%
+  mutate(
+    popularity = popularity / total_count
+  )
+```
+
+```{r}
+ggplot(billboard_plot) +
+  geom_line(mapping = aes(x = year, y = popularity, color = genre)) +
+  theme_hc() +
+  xlab("Year") + ylab("Popularity") + 
+  ggtitle("Popularity of genres") +
+  ggsave("billboard_genres.pdf")
+  
+```
+
