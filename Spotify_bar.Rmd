@@ -1,0 +1,53 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+
+# Assign csv file to a variable
+Spotify_bar<- read_csv("top10s.csv")
+
+# Rename variable top genre to genre
+names(Spotify_bar)[names(Spotify_bar) == 'top genre'] <- 'genre'
+
+# Select correct columns
+spotify_filtered_bar <- Spotify_bar %>%
+  select('genre', pop, year)
+```
+
+Merge with excel csv
+```{r}
+# read in new file
+GenresCombined_bar <- read_csv('GenresCombined.csv')
+# Combine two files
+spotify_filtered_bar <- left_join(spotify_filtered_bar, GenresCombined_bar, by = 'genre')
+
+```
+Form a new data set that contains a column of total amount of songs per genre in the data set
+```{r}
+spotify_filtered_barNEW <- spotify_filtered_bar %>%
+  group_by(classified_genre) %>%
+  summarize(total = n()) %>%
+  na.omit()
+```
+Creating the bar graph
+```{r}
+#creating a bar graph
+ggplot(data = spotify_filtered_barNEW) +
+  geom_col(mapping = aes(
+    x = reorder(classified_genre, -total), y = total, fill = classified_genre, na.rm = TRUE)) +
+    # Addin the theme
+    theme_hc() +
+    # removing the legend and rotating the text on the x axis
+    theme(legend.position = "none", 
+          axis.text.x = element_text(angle=30), 
+          text = element_text(family = "CMU Serif")) + 
+    xlab("Genres") + ylab("Number of songs in top Spotify list") +
+    ggtitle("Total number of songs per genre in Top Spotify list (2010-2019)") +
+    ggsave("Total_nr_spotify.pdf")
+```
