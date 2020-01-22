@@ -69,7 +69,7 @@ ggplot(data = remove_missing(spotify_filtered)) +
     x = reorder(Genre, -pop), y = pop, fill = Genre, na.rm = TRUE)) +
     theme_hc() +
     theme(legend.position = "none", 
-          axis.text.x = element_text(angle=45), 
+          axis.text.x = element_text(angle=30), 
           text = element_text(family = "CMU Serif"))  +
     xlab("Genres") + ylab("Popularity score") +
     ggtitle("Popularity score per music genre (2010-2019)") +
