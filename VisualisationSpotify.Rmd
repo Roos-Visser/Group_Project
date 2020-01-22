@@ -75,6 +75,4 @@ ggplot(data = remove_missing(spotify_filtered)) +
     ggtitle("Popularity score per music genre (2010-2019)") +
   geom_point(mapping = aes(x=Genre, y = pop)) +
      ggsave("Violin_graph_spotify.pdf") 
-  
-
 ```
