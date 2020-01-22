@@ -3,12 +3,18 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-
+loading all relevant packages
 ```{r}
 # load in tidyverse
 library(tidyverse)
 library(ggplot2)
-
+#library(xtable)
+library(ggthemes)
+library(RColorBrewer)
+library(extrafont)
+```
+Loading the data
+```{r}
 # Assign csv file to a variable
 Spotify<- read_csv("top10s.csv")
 
@@ -42,23 +48,33 @@ names(spotify_filtered)[names(spotify_filtered) == 'classified_genre'] <- 'Genre
 ```
 
 ```{r}
-spotify_filtered <- spotify_filtered %>%
-  group_by(Genre, year) %>%
+spotify_filtered_new <- spotify_filtered %>%
+  group_by(Genre) %>%
   summarize(total = mean(pop, na.rm = TRUE)) %>%
   na.omit()
 
 #creating a bar graph
-ggplot(data = spotify_filtered) +
+ggplot(data = spotify_filtered_new) +
   geom_col(mapping = aes(
-    x = reorder(Genre, total), y = total)) + 
+    x = reorder(Genre, -total), y = total)) + 
     xlab("Genres") + ylab("Average popularity score") +
-    ggtitle("Popularity scores per music genre (2010-2019)")
+    ggtitle("Popularity scores per music genre (2010-2019)") +
+    #theme_hc() +
+    #theme(text=element_text(family = "CMU Serif")) +
+    ggsave("Total_popularity_per_genre_spotify.pdf")
 
-# creating a graph with year, genre and pop score
-#ggplot(data = spotify_filtered) +
- # geom_line(aes(
-  #  colour = Genre, y = total, x = year
-  #))
+#creating a violin graph with genre and pop score
+ggplot(data = remove_missing(spotify_filtered)) +
+  geom_violin(mapping = aes(
+    x = reorder(Genre, -pop), y = pop, fill = Genre, na.rm = TRUE)) +
+    theme_hc() +
+    theme(legend.position = "none", 
+          axis.text.x = element_text(angle=45), 
+          text = element_text(family = "CMU Serif"))  +
+    xlab("Genres") + ylab("Popularity score") +
+    ggtitle("Popularity score per music genre (2010-2019)") +
+    ggsave("Violin_graph_spotify.pdf") +
+  geom_point(mapping = aes(x=Genre, y = pop))
   
 
 ```
