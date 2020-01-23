@@ -31,7 +31,8 @@ billboard_average <- billboard_per_year %>%
   )
 ```
 
-Creating the relevant column that describes the popularity of a song
+Creating the relevant column that describes the popularity of a song. 
+Position is multiplied by it's count (fraction) to ensure weighted popularity (some songs are listed multiple times as they are tagged with several genres)
 ```{r}
 billboard_pop_column <- billboard %>%
   group_by(genre, year) %>%
@@ -42,7 +43,8 @@ billboard_pop_column <- billboard %>%
 ```
 
 
-Summing the data per genre and per year and selecting the largest genres from that.
+Summing the data per genre and per year. 
+Selecting the largest genres from that to clean the figure.
 ```{r}
 billboard_plot <-  billboard_pop_column %>%
   summarize(
@@ -85,4 +87,4 @@ ggplot(billboard_plot) +
   ggsave("billboard_genres.png")
   
 ```
-
+Done!
