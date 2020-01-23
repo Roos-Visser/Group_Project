@@ -4,11 +4,14 @@ output: html_notebook
 ---
 
 
-
+#Loading tidy verse and ggplot extended functions
 ```{r}
 library(tidyverse)
 library(ggplot2)
+```
 
+#Reading files
+```{r}
 # Assign csv file to a variable
 Spotify_bar<- read_csv("top10s.csv")
 
@@ -20,7 +23,7 @@ spotify_filtered_bar <- Spotify_bar %>%
   select('genre', pop, year)
 ```
 
-Merge with excel csv
+#Merge with excel csv
 ```{r}
 # read in new file
 GenresCombined_bar <- read_csv('GenresCombined.csv')
@@ -28,14 +31,17 @@ GenresCombined_bar <- read_csv('GenresCombined.csv')
 spotify_filtered_bar <- left_join(spotify_filtered_bar, GenresCombined_bar, by = 'genre')
 
 ```
-Form a new data set that contains a column of total amount of songs per genre in the data set
+
+
+#Form a new data set that contains a column of total amount of songs per genre in the data set
 ```{r}
 spotify_filtered_barNEW <- spotify_filtered_bar %>%
   group_by(classified_genre) %>%
   summarize(total = n()) %>%
   na.omit()
 ```
-Creating the bar graph
+
+#Creating the bar graph
 ```{r}
 #creating a bar graph
 ggplot(data = spotify_filtered_barNEW) +
