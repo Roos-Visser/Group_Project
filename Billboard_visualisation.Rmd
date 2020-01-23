@@ -3,7 +3,7 @@ title: "Visualise billboard data"
 output: html_notebook
 ---
  
-Loading the relevant packages
+#Loading the relevant packages
 ```{r}
 library(tidyverse)
 library(ggthemes)
@@ -12,12 +12,12 @@ loadfonts()
 par(family = "CMU Serif")
 ```
 
-Reading the data
+#Reading the data
 ```{r}
 billboard <- read_csv("billboard.csv")
 ```
 
-Finding the number of songs, both average and per year.
+#Finding the number of songs, both average and per year.
 ```{r}
 billboard_per_year <- billboard %>%
   group_by(year) %>%
@@ -31,8 +31,8 @@ billboard_average <- billboard_per_year %>%
   )
 ```
 
-Creating the relevant column that describes the popularity of a song. 
-Position is multiplied by it's count (fraction) to ensure weighted popularity (some songs are listed multiple times as they are tagged with several genres)
+#Creating the relevant column that describes the popularity of a song. 
+#Position is multiplied by it's count (fraction) to ensure weighted popularity (some songs are listed multiple times as they are tagged with several genres)
 ```{r}
 billboard_pop_column <- billboard %>%
   group_by(genre, year) %>%
@@ -43,8 +43,8 @@ billboard_pop_column <- billboard %>%
 ```
 
 
-Summing the data per genre and per year. 
-Selecting the largest genres from that to clean the figure.
+#Summing the data per genre and per year. 
+#Selecting the largest genres from that to clean the figure.
 ```{r}
 billboard_plot <-  billboard_pop_column %>%
   summarize(
@@ -70,7 +70,7 @@ billboard_plot <-  billboard_pop_column %>%
 ```
 
 
-Making a pretty plot.
+#Making a pretty plot.
 ```{r}
 ggplot(billboard_plot) +
   geom_line(mapping = aes(x = year, y = popularity)) +
@@ -87,4 +87,4 @@ ggplot(billboard_plot) +
   ggsave("billboard_genres.png")
   
 ```
-Done!
+#Done!
