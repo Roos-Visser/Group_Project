@@ -3,33 +3,57 @@ title: "Visualise billboard data"
 output: html_notebook
 ---
  
-
+Loading the relevant packages
 ```{r}
 library(tidyverse)
 library(ggthemes)
+library(extrafont)
+loadfonts()
+par(family = "CMU Serif")
 ```
 
+Reading the data
 ```{r}
 billboard <- read_csv("billboard.csv")
 ```
 
+Finding the number of songs, both average and per year.
+```{r}
+billboard_per_year <- billboard %>%
+  group_by(year) %>%
+  summarise(
+    number_of_songs = sum(count)
+  ) 
+
+billboard_average <- billboard_per_year %>%
+  summarise(
+    average_songs = mean(number_of_songs)
+  )
+```
+
+Creating the relevant column that describes the popularity of a song
 ```{r}
 billboard_pop_column <- billboard %>%
   group_by(genre, year) %>%
   mutate(
     pos = 101 - pos,
-    popularity = pos*count
+    popularity = pos*count,
   )
+```
 
-billboard_plot <-  billboard_pop_column%>%
+
+Summing the data per genre and per year and selecting the largest genres from that.
+```{r}
+billboard_plot <-  billboard_pop_column %>%
   summarize(
-    popularity = sum(popularity),
-    total_count = sum(count)
+    popularity = sum(popularity)
   ) %>%
+  left_join(billboard_per_year) %>%
   mutate(
-    popularity = popularity
+    popularity = popularity / number_of_songs
   ) %>%
   filter(
+    year >= 1960,
     genre != "jazz",
     genre != "religious",
     genre != "disco",
@@ -43,13 +67,22 @@ billboard_plot <-  billboard_pop_column%>%
   )
 ```
 
+
+Making a pretty plot.
 ```{r}
 ggplot(billboard_plot) +
-  geom_line(mapping = aes(x = year, y = popularity, color = genre)) +
+  geom_line(mapping = aes(x = year, y = popularity)) +
+    facet_grid(genre ~ .) +
   theme_hc() +
   xlab("Year") + ylab("Popularity") + 
-  ggtitle("Popularity of genres") +
-  ggsave("billboard_genres.pdf")
+  ggtitle("Popularity of genres") + 
+  theme(strip.text.y = element_text(angle = 0, family = "CMU Serif"), text = element_text(family = "CMU Serif")) +
+#  scale_y_continuous(trans = "reverse") +
+#  theme(
+#   strip.background = element_rect(
+#     color="black", aes(fill = rainbow(5)[genre]), size=1.5, linetype="solid" 
+#     )) + 
+  ggsave("billboard_genres.png")
   
 ```
 
