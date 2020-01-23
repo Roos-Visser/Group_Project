@@ -3,7 +3,7 @@ title: "R Notebook"
 output: html_notebook
 ---
 
-loading all relevant packages
+# Loading all relevant packages
 ```{r}
 # load in tidyverse
 library(tidyverse)
@@ -13,7 +13,8 @@ library(ggthemes)
 library(RColorBrewer)
 library(extrafont)
 ```
-Loading the data
+
+#Loading the data
 ```{r}
 # Assign csv file to a variable
 Spotify<- read_csv("top10s.csv")
@@ -26,6 +27,7 @@ spotify_filtered <- Spotify %>%
   select('genre', pop, year)
 ```
 
+
 ```{r}
 # read in new file
 GenresCombined <- read_csv('GenresCombined.csv')
@@ -34,6 +36,7 @@ spotify_filtered <- left_join(spotify_filtered, GenresCombined, by = 'genre')
 
 
 ```
+
 
 ```{r}
 # Make the values for year numeric, and rename the columns
@@ -47,6 +50,7 @@ names(spotify_filtered)[names(spotify_filtered) == 'classified_genre'] <- 'Genre
 
 ```
 
+# Creating the plot(s)
 ```{r}
 spotify_filtered_new <- spotify_filtered %>%
   group_by(Genre) %>%
