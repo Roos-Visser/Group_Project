@@ -1,0 +1,105 @@
+---
+title: "Combine wiki and billboard"
+output: html_notebook
+---
+
+The packages and fonts necessary.
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(extrafont)
+library(ggplot2)
+loadfonts()
+par(family = "CMU Serif")
+```
+
+Loading all the relevant data.
+```{r}
+billboard <- read_csv("billboard.csv")
+musicians <- read_csv('Group_Project/genres_data.csv')
+genres <- read_csv('Group_Project/genres-mapping.csv')
+```
+
+
+Adapt the wikipedia database to be plottable - this is the exact same as what happens in the wikipedia visualisation. The differences are: 'genre' and 'year' columns no longer have a capitalisation, the year is selected from 1980 onwards and only Pop music is selected.
+```{r}
+musicians <- left_join(musicians, genres, by='genre')
+
+musicians <- musicians %>%
+  mutate(
+    many_genres = genre,
+    genre = classified_genre,
+    year = as.numeric(year)
+  ) %>%
+  select(-c(classified_genre)) %>%
+  filter(year > 1980)
+
+musicians_10 <- musicians %>%
+  filter(genre == "Pop music")
+
+Number_of_genres_10 <- musicians_10 %>%
+  group_by(genre, year) %>%
+  summarize(n_genres = n()) %>%
+  arrange(desc(n_genres)) %>%
+  select(-c(genre))
+```
+
+This is the exact same adaptation of the billboard dataset as in the billboard visualisation. The difference is that only the pop genre is selected.
+```{r}
+billboard_per_year <- billboard %>%
+  group_by(year) %>%
+  summarise(
+    number_of_songs = sum(count)
+  ) 
+
+billboard_average <- billboard_per_year %>%
+  summarise(
+    average_songs = mean(number_of_songs)
+  )
+
+billboard_pop_column <- billboard %>%
+  group_by(genre, year) %>%
+  mutate(
+    pos = 101 - pos,
+    popularity = pos*count,
+  )
+
+billboard_plot <-  billboard_pop_column %>%
+  summarize(
+    popularity = sum(popularity)
+  ) %>%
+  left_join(billboard_per_year) %>%
+  mutate(
+    popularity = popularity / number_of_songs
+  ) %>%
+  filter(
+    year >= 1980,
+    genre == "pop"
+  )
+  
+```
+
+Plotting the graph! Including a separate scale on the right side.
+```{r}
+ggplot() +
+  geom_line(data = Number_of_genres_10, mapping = aes(x = year, y = n_genres/10, color='Production')) +
+  geom_line(data = billboard_plot, mapping = aes(x = year, y = popularity, color='Consumption')) +
+  scale_y_continuous(sec.axis = sec_axis(~ . *10 , name = "New artists producing")) +
+  theme_hc() + theme(text = element_text(family = "CMU Serif")) +
+  scale_color_manual(values = c('red', 'blue')) +
+  labs(
+    y = "Inverted billboard position",
+    x = "Year",
+    colour = "Parameter" ) +
+  ggtitle("Relative popularity and production of pop music") +
+  ggsave("combined_plot.pdf")
+```
+
+
+
+
+
+
+
+
+
