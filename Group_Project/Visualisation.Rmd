@@ -3,7 +3,7 @@ title: "Visualisation in R"
 output: html_notebook
 ---
 
-Installing all the packages we need. 
+Installing all the packages we need - run these once to install the packages if you don't have them - then comment them out.
 ```{r}
 #install.packages("ggthemes")
 #install.packages("xtable")
@@ -82,6 +82,7 @@ Plotting a count-graph with the 10 most common genres.
 ggplot(musicians_10) + 
   geom_count(mapping = aes(x = Year, y = Genre, color = Genre), alpha = 0.7) +
   guides(color = FALSE) + 
+  labs(size = "New artists in genre per year") +
   scale_size_area() +
   theme_hc() + 
   theme(text=element_text(family="CMU Serif")) +
@@ -90,8 +91,8 @@ ggplot(musicians_10) +
 ```
 
 ```{r}
-ggplot(musicians_10, aes(x = Year, y = Genre, group = Genre, fill = Genre)) +
-  geom_density_ridges(scale = 0.9) +
+ggplot(musicians_10, aes(x = Year, y = Genre, group = Genre, fill = Genre, height=..count..)) +
+  geom_density_ridges(scale = 0.95, stat="density") +
   guides(fill = FALSE) +
   theme_hc() + 
   theme(text=element_text(family="CMU Serif")) +
