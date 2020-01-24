@@ -78,13 +78,13 @@ ggplot(billboard_plot) +
   theme_hc() +
   xlab("Year") + ylab("Popularity") + 
   ggtitle("Popularity of genres") + 
-  theme(strip.text.y = element_text(angle = 0, family = "CMU Serif"), text = element_text(family = "CMU Serif")) +
+  theme(strip.text.y = element_text(angle = 0, family = "CMU Serif"), text = element_text(family = "CMU Serif"), panel.spacing = unit(15, "points")) +
 #  scale_y_continuous(trans = "reverse") +
 #  theme(
 #   strip.background = element_rect(
 #     color="black", aes(fill = rainbow(5)[genre]), size=1.5, linetype="solid" 
 #     )) + 
-  ggsave("billboard_genres.png")
+  ggsave("billboard_genres.pdf")
   
 ```
 #Done!
