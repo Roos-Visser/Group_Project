@@ -9,6 +9,7 @@ Installing all the packages we need.
 #install.packages("xtable")
 #install.packages("extrafont")
 #font_import(pattern = "lmroman*")
+#install.packages("ggridges")
 ```
 
 Loading the relevant packages.
@@ -18,6 +19,7 @@ library(xtable)
 library(ggthemes)
 library(RColorBrewer)
 library(extrafont)
+library(ggridges)
 ```
 
 Make the right font.
@@ -46,6 +48,7 @@ musicians <- musicians %>%
     Genre = classified_genre,
     Year = as.numeric(year)
   ) %>%
+  select(-c(genre,classified_genre)) %>%
   filter(year > 1900)
 
 musicians_10 <- musicians %>%
@@ -86,6 +89,26 @@ ggplot(musicians_10) +
    ggsave("dotplot.pdf")
 ```
 
+```{r}
+ggplot(musicians_10, aes(x = Year, y = Genre, group = Genre, fill = Genre)) +
+  geom_density_ridges(scale = 0.9) +
+  guides(fill = FALSE) +
+  theme_hc() + 
+  theme(text=element_text(family="CMU Serif")) +
+  ggtitle("New artists by genre") +
+   ggsave("ridgeplot1.pdf")
+```
+
+```{r}
+ggplot(Number_of_genres_10) +
+  geom_ridgeline(mapping = aes(x = Year, group = Genre, y = n_genres, height = n_genres)) +
+  guides(fill = FALSE) +
+  theme_hc() + 
+  theme(text=element_text(family="CMU Serif")) +
+  ggtitle("New artists by genre") +
+   ggsave("ridgeplot1.pdf")
+
+```
   
   
 Plotting a linegraph with the 10 most common genres.
@@ -99,15 +122,19 @@ ggplot(Number_of_genres_10) +
   ggsave("Linegraph_artists.pdf") 
 ```
 
-Plotting a linegraph with the 3 popular genres
+Plotting a linegraph with the 3 most popular genres - pop, dance and hiphop
 ```{r}
 most_popular <- Number_of_genres_20 %>%
-  filter(Genre == "Dance music" |
-    Genre == "Pop  music" | 
-    Genre == "Hip hop music") 
+  filter(
+      Genre == "Dance music" |
+      Genre == "Hip hop music" |
+      Genre == "Pop music") 
 
   ggplot(most_popular) +
-  geom_line(mapping = aes(x = Year, y = n_genres, color = Genre)) +
-  xlab("Year") + ylab("Number of new artists")
+    geom_line(mapping = aes(x = Year, y = n_genres, color = Genre)) +
+    xlab("Year") + ylab("Number of new artists") +
+    ggtitle("New artists in most popular genres") +
+    theme_hc() + theme(text=element_text(family="CMU Serif")) +
+    ggsave("Only3.pdf")
 ```
 
