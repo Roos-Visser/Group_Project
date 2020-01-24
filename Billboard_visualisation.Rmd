@@ -32,6 +32,7 @@ billboard_average <- billboard_per_year %>%
 ```
 
 #Creating the relevant column that describes the popularity of a song. 
+# 101-pos(ition) ensures inversing the scales
 #Position is multiplied by it's count (fraction) to ensure weighted popularity (some songs are listed multiple times as they are tagged with several genres)
 ```{r}
 billboard_pop_column <- billboard %>%
