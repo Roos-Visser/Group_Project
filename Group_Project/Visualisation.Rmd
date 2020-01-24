@@ -3,7 +3,7 @@ title: "Visualisation in R"
 output: html_notebook
 ---
 
-Installing all the packages we need. 
+#Installing all the packages we need. 
 ```{r}
 #install.packages("ggthemes")
 #install.packages("xtable")
@@ -12,7 +12,7 @@ Installing all the packages we need.
 #install.packages("ggridges")
 ```
 
-Loading the relevant packages.
+#Loading the relevant packages.
 ```{r}
 library(tidyverse)
 library(xtable)
@@ -22,25 +22,25 @@ library(extrafont)
 library(ggridges)
 ```
 
-Make the right font.
+# Make the right font.
 ```{r}
 loadfonts()
 par(family = "CMU Serif")
 ```
 
-Loading the data.
+# Loading the data.
 ```{r}
 musicians <- read_csv('genres_data.csv')
 genres <- read_csv('genres-mapping.csv')
 ```
 
-Rewriting the genres to only include the 20 most common ones.
+# Rewriting the genres to only include the 20 most common ones.
 ```{r}
 musicians <- left_join(musicians, genres, by='genre')
 ```
 
-Renaming the columns to "Genre" and "Year" for the relevant columns.
-Defining a dataframe with the 10 most common genres out of the 20.
+# Renaming the columns to "Genre" and "Year" for the relevant columns.
+# Defining a dataframe with the 10 most common genres out of the 20.
 ```{r}
 musicians <- musicians %>%
   mutate(
@@ -64,7 +64,7 @@ musicians_10 <- musicians %>%
          Genre == "Soul music")
 ```
 
-Defining two dataframes with the number of genres for each of the 20 and 10 most common genres. 
+# Defining two dataframes with the number of genres for each of the 20 and 10 most common genres. 
 ```{r}
 Number_of_genres_10 <- musicians_10 %>%
   group_by(Genre, Year) %>%
@@ -77,7 +77,7 @@ Number_of_genres_20 <- musicians %>%
   arrange(desc(n_genres))
 ```
 
-Plotting a count-graph with the 10 most common genres.
+# Plotting a count-graph with the 10 most common genres.
 ```{r}
 ggplot(musicians_10) + 
   geom_count(mapping = aes(x = Year, y = Genre, color = Genre), alpha = 0.7) +
@@ -89,6 +89,7 @@ ggplot(musicians_10) +
    ggsave("dotplot.pdf")
 ```
 
+
 ```{r}
 ggplot(musicians_10, aes(x = Year, y = Genre, group = Genre, fill = Genre)) +
   geom_density_ridges(scale = 0.9) +
@@ -98,6 +99,7 @@ ggplot(musicians_10, aes(x = Year, y = Genre, group = Genre, fill = Genre)) +
   ggtitle("New artists by genre") +
    ggsave("ridgeplot1.pdf")
 ```
+
 
 ```{r}
 ggplot(Number_of_genres_10) +
@@ -111,7 +113,7 @@ ggplot(Number_of_genres_10) +
 ```
   
   
-Plotting a linegraph with the 10 most common genres.
+# Plotting a linegraph with the 10 most common genres.
 ```{r}
 ggplot(Number_of_genres_10) +
   geom_line(mapping = aes(x = Year, y = n_genres, color = Genre)) +
@@ -122,7 +124,7 @@ ggplot(Number_of_genres_10) +
   ggsave("Linegraph_artists.pdf") 
 ```
 
-Plotting a linegraph with the 3 most popular genres - pop, dance and hiphop
+# Plotting a linegraph with the 3 most popular genres - pop, dance and hiphop
 ```{r}
 most_popular <- Number_of_genres_20 %>%
   filter(
