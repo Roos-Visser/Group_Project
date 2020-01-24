@@ -90,13 +90,14 @@ ggplot(musicians_10) +
    ggsave("dotplot.pdf")
 ```
 
+Ridgeplot - inlcuding normalised densities over all the genres.
 ```{r}
 ggplot(musicians_10, aes(x = Year, y = Genre, group = Genre, fill = Genre, height=..count..)) +
   geom_density_ridges(scale = 0.95, stat="density") +
   guides(fill = FALSE) +
   theme_hc() + 
   theme(text=element_text(family="CMU Serif")) +
-  ggtitle("New artists by genre") +
+  ggtitle("New solo singers by genre") +
    ggsave("ridgeplot1.pdf")
 ```
 
@@ -116,8 +117,8 @@ Plotting a linegraph with the 10 most common genres.
 ```{r}
 ggplot(Number_of_genres_10) +
   geom_line(mapping = aes(x = Year, y = n_genres, color = Genre)) +
-  xlab("Year") + ylab("Number of new artists") +
-  ggtitle("New artists by genre") +
+  xlab("Year") + ylab("Number of new solo singers") +
+  ggtitle("New solo singers by genre") +
   theme_hc() +
   theme(text=element_text(family="CMU Serif")) +
   ggsave("Linegraph_artists.pdf") 
